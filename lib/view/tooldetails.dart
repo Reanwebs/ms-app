@@ -11,7 +11,7 @@ class ToolDetailPage extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Tool Details',
               style: TextStyle(
                 fontSize: 22,
@@ -21,7 +21,7 @@ class ToolDetailPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Image.asset(
-              'assets/images/wheelbarrow_yellow.png', // Replace with your asset path
+              'assets/images/wheelbarrow_yellow.png',
               width: 100,
               height: 100,
             ),
