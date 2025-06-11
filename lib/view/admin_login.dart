@@ -1,4 +1,5 @@
 
+import 'package:construction_app/view/admindashboard.dart';
 import 'package:construction_app/view/forgot_password.dart';
 import 'package:construction_app/view/homepage.dart';
 import 'package:construction_app/widgets/appbar.dart';
@@ -6,14 +7,14 @@ import 'package:flutter/material.dart';
 
 
 
-class WelcomeBackScreen extends StatefulWidget {
-  const WelcomeBackScreen({super.key});
+class Adminlogin extends StatefulWidget {
+  const Adminlogin({super.key});
 
   @override
-  State<WelcomeBackScreen> createState() => _WelcomeBackScreenState();
+  State<Adminlogin> createState() => _AdminloginState();
 }
 
-class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
+class _AdminloginState extends State<Adminlogin> {
   bool _obscurePassword = true;
   bool _rememberMe = true;
 
@@ -57,7 +58,7 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
               TextField(
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.person,color: Colors.grey),
-                  hintText: 'Username',
+                  hintText: 'admin-Username',
                   hintStyle: TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -104,12 +105,12 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                   ),
                   const Text("Remember me"),
                   const Spacer(),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>ForgotPasswordScreen() ,));
-                    },
-                    child: const Text("Forgot password",style: TextStyle(color: Color(0xff012970)),),
-                  ),
+                  // TextButton(
+                  //   onPressed: () {
+                  //     Navigator.push(context, MaterialPageRoute(builder: (context) =>ForgotPasswordScreen() ,));
+                  //   },
+                  //   child: const Text("Forgot password",style: TextStyle(color: Color(0xff012970)),),
+                  // ),
                 ],
               ),
               
@@ -141,7 +142,7 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeHomePage(),));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardPage(),));
                   },
                   child: const Text("Log In", style: TextStyle(fontSize: 16,color: Colors.white)),
                 ),

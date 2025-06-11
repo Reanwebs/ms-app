@@ -38,7 +38,10 @@ dependencies:
   font_awesome_flutter:
   slide_to_act: ^2.0.1
   pie_chart:
-  geolocator: ^14.0.1
+  google_maps_flutter: ^2.6.0
+  geolocator: ^10.1.0
+  
+  image_picker:
 
 
 dev_dependencies:

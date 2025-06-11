@@ -1,6 +1,8 @@
 
-import 'package:construction_app/view/enter%20your%20details.dart';
+import 'package:construction_app/view/admin_login.dart';
+import 'package:construction_app/view/addemployee.dart';
 import 'package:construction_app/view/login.dart';
+import 'package:construction_app/view/userlogin.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,22 +22,27 @@ class SelectRoleScreen extends StatefulWidget {
 class _SelectRoleScreenState extends State<SelectRoleScreen> {
   String? selectedRole;
 
-  void _onNext() {
-    if (selectedRole == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please select a role")),
-      );
-    } else {
+ void _onNext() {
+  if (selectedRole == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Please select a role")),
+    );
+  } else {
+    if (selectedRole == 'Employee') {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EnterDetailsScreen(),
-          ));
-
-      // Navigate or handle selected role
-      print("Selected role: $selectedRole");
+        context,
+        MaterialPageRoute(builder: (context) => WelcomeBackScreen()),
+      );
+    } else if (selectedRole == 'Employer') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Adminlogin()),
+      );
     }
+    print("Selected role: $selectedRole");
   }
+}
+
 
   Widget _buildRoleButton(String role) {
     bool isSelected = selectedRole == role;

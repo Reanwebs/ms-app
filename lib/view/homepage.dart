@@ -1,7 +1,7 @@
-
 import 'package:construction_app/view/activity.dart';
-import 'package:construction_app/view/attendancemarkpage.dart';
+import 'package:construction_app/view/attendance.dart';
 import 'package:construction_app/view/my%20profile.dart';
+import 'package:construction_app/view/toolpage.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
 
@@ -23,10 +23,10 @@ class _EmployeeHomePageState extends State<EmployeeHomePage> {
   int _selectedIndex = 2;
 
   final List<Widget> _pages = [
-    Center(child: Text("Time Page")),
+    ToolsLogPage(),
     ActivityPage(),
     HomeContentPage(),
-    MainTabPage(),
+    MarkAttendancePage(),
     ProfileScreen()
   ];
 
@@ -278,58 +278,106 @@ class _HomeContentPageState extends State<HomeContentPage> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text("Todays Report",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff3F72AF))),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                HomeContentPage._reportCard(
-                  "Check-In",
-                  "10:00 am",
-                  "late",
-                  Icons.login,
-                ),
-                const SizedBox(width: 10),
-                HomeContentPage._reportCard(
-                    "Check-Out", "5:00 pm", "on-time", Icons.logout),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                HomeContentPage._progressCard("Present", 148, 0.74),
-                const SizedBox(width: 10),
-                HomeContentPage._progressCard("Total Working\nDays", 200, 1.0),
-              ],
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  side: const BorderSide(color: Color(0xff2B55C7)),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                onPressed: () {},
-                child: Text("Monthly Report",
-                    style: TextStyle(color: Color(0xff3F72AF))),
+            DefaultTabController(
+              length: 2,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xff3F72AF)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TabBar(
+                      labelColor: Colors.white, // Selected label
+                      unselectedLabelColor:
+                          Color(0xff3F72AF), // Unselected label
+                      indicator: BoxDecoration(
+                        color: Color(0xff3F72AF), // Background for selected tab
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      tabs: const [
+                        Tab(text: "Today Report"),
+                        Tab(text: "Monthly Report"),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 160, // adjust based on content
+                    child: TabBarView(
+                      children: [
+                        // Today Report
+                        Row(
+                          children: [
+                            HomeContentPage._reportCard(
+                              "Check-In",
+                              "10:00 am",
+                              "late",
+                              Icons.login,
+                            ),
+                            const SizedBox(width: 10),
+                            HomeContentPage._reportCard(
+                              "Check-Out",
+                              "5:00 pm",
+                              "on-time",
+                              Icons.logout,
+                            ),
+                          ],
+                        ),
+                        // Monthly Report
+                        Row(
+                          children: [
+                            HomeContentPage._progressCard("Present", 148, 0.74),
+                            const SizedBox(width: 10),
+                            HomeContentPage._progressCard(
+                                "Total Working\nDays", 200, 1.0),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
+
+            const SizedBox(height: 12),
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: ElevatedButton(
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Colors.white,
+            //       side: const BorderSide(color: Color(0xff2B55C7)),
+            //       shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(12)),
+            //     ),
+            //     onPressed: () {},
+            //     child: Text("Monthly Report",
+            //         style: TextStyle(color: Color(0xff3F72AF))),
+            //   ),
+            // ),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text("Activity",
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Color(0xff3F72AF))),
-                Text("View All", style: TextStyle(color: Color(0xff3F72AF))),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ActivityPage(),
+                        ));
+                  },
+                  child: Text("View All",
+                      style: TextStyle(color: Color(0xff3F72AF))),
+                )
               ],
             ),
             HomeContentPage._activityTile(

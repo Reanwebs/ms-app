@@ -1,5 +1,6 @@
 
 import 'package:construction_app/view/homepage.dart';
+import 'package:construction_app/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -61,6 +62,8 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomBackAppBar(
+    onBack: () => Navigator.pop(context),),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),

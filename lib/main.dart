@@ -1,5 +1,7 @@
 
 import 'package:construction_app/view/login.dart';
+import 'package:construction_app/view/sign_up.dart';
+import 'package:construction_app/view/userlogin.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
 
      
-      home:  LoginApp(),
+      home:  SelectRoleScreen(),
     );
   }
 }

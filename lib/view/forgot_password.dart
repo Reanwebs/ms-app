@@ -1,13 +1,9 @@
 
 import 'package:construction_app/view/otp.dart';
+import 'package:construction_app/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ForgotPasswordScreen(),
-  ));
-}
+
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
@@ -15,7 +11,10 @@ class ForgotPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: CustomBackAppBar(
+    onBack: () => Navigator.pop(context),),
       body: SafeArea(
+        
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: ListView(
