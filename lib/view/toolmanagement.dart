@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:construction_app/view/add_tools.dart';
 import 'package:flutter/material.dart';
 
@@ -263,84 +264,105 @@ class ToolLogTab extends StatelessWidget {
 class RequestedToolsTab extends StatelessWidget {
   const RequestedToolsTab({super.key});
 
+  Future<void> updateStatus(String docId, String newStatus) async {
+    await FirebaseFirestore.instance
+        .collection('tool_requests')
+        .doc(docId)
+        .update({'status': newStatus});
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> requestedTools = [
-      {
-        "name": "Electric Drill",
-        "image": "https://img.icons8.com/fluency/96/drill.png",
-        "id": "TOOL-REQ-001"
-      },
-      {
-        "name": "Welding Torch",
-        "image": "https://img.icons8.com/fluency/96/welding.png",
-        "id": "TOOL-REQ-002"
-      },
-    ];
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('tool_requests')
+          .where('status', isEqualTo: 'pending') // Only pending requests
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(12),
-      itemCount: requestedTools.length,
-      itemBuilder: (context, index) {
-        final tool = requestedTools[index];
-        return Card(
-          margin: const EdgeInsets.only(bottom: 16),
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Color(0xff2B55C7), width: 1.2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          color: const Color(0x4F4E93EF),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.network(
-                  tool['image']!,
-                  height: 60,
-                  width: 60,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(tool['name']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                      const SizedBox(height: 6),
-                      Text("ID: ${tool['id']}", style: const TextStyle(fontSize: 13)),
-                    ],
-                  ),
-                ),
-                Column(
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text("No pending requests"));
+        }
+
+        final requestedTools = snapshot.data!.docs;
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(12),
+          itemCount: requestedTools.length,
+          itemBuilder: (context, index) {
+            final doc = requestedTools[index];
+            final data = doc.data() as Map<String, dynamic>;
+
+            return Card(
+              margin: const EdgeInsets.only(bottom: 16),
+              shape: RoundedRectangleBorder(
+                side: const BorderSide(color: Color(0xff2B55C7), width: 1.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              color: const Color(0x4F4E93EF),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        // Accept logic
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        minimumSize: const Size(80, 36),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      ),
-                      child: const Text("Accept", style: TextStyle(fontSize: 13,color: Colors.white)),
+                    Image.network(
+                      data['imageUrl'] ?? "https://img.icons8.com/fluency/96/toolbox.png",
+                      height: 60,
+                      width: 60,
                     ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Decline logic
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        minimumSize: const Size(80, 36),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(data['toolName'] ?? '',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16)),
+                          const SizedBox(height: 6),
+                          Text("ID: ${data['toolId'] ?? ''}",
+                              style: const TextStyle(fontSize: 13)),
+                        ],
                       ),
-                      child: const Text("Decline", style: TextStyle(fontSize: 13,color: Colors.white)),
                     ),
+                    Column(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => updateStatus(doc.id, "accepted"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            minimumSize: const Size(80, 36),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text("Accept",
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.white)),
+                        ),
+                        const SizedBox(height: 8),
+                        ElevatedButton(
+                          onPressed: () => updateStatus(doc.id, "declined"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            minimumSize: const Size(80, 36),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text("Decline",
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.white)),
+                        ),
+                      ],
+                    )
                   ],
-                )
-              ],
-            ),
-          ),
+                ),
+              ),
+            );
+          },
         );
       },
     );

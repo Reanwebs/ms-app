@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:construction_app/view/set_password.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,14 +33,55 @@ class _AddEmployeeState extends State<AddEmployee> {
     super.dispose();
   }
 
-  void _onNextPressed() {
-    if (_formKey.currentState!.validate()) {
+void _onNextPressed() async {
+  if (_formKey.currentState!.validate()) {
+    String username = _usernameController.text.trim();
+    String email = _emailController.text.trim();
+    String mobile = _mobileController.text.trim();
+    String password = _passwordController.text.trim();
+
+    try {
+      // Create user in Firebase Authentication
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // Get user ID
+      String uid = userCredential.user!.uid;
+
+      // Save additional user data in Firestore
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'uid': uid,
+        'username': username,
+        'email': email,
+        'mobile': mobile,
+        'created_at': Timestamp.now(),
+      });
+
+      // Navigate to next screen
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SetPasswordscreen()),
       );
+    } on FirebaseAuthException catch (e) {
+      String message = 'Signup failed';
+      if (e.code == 'email-already-in-use') {
+        message = 'Email already in use';
+      } else if (e.code == 'invalid-email') {
+        message = 'Invalid email format';
+      } else if (e.code == 'weak-password') {
+        message = 'Password should be at least 6 characters';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,9 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:construction_app/view/forgot_password.dart';
 import 'package:construction_app/view/homepage.dart';
 import 'package:construction_app/widgets/appbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 
@@ -16,6 +18,15 @@ class WelcomeBackScreen extends StatefulWidget {
 class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
   bool _obscurePassword = true;
   bool _rememberMe = true;
+  final TextEditingController _usernameController = TextEditingController();
+final TextEditingController _passwordController = TextEditingController();
+@override
+void dispose() {
+  _usernameController.dispose();
+  _passwordController.dispose();
+  super.dispose();
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,42 +65,42 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                 style: TextStyle(color: Colors.grey),
               ),
               const SizedBox(height: 30),
-              TextField(
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.person,color: Colors.grey),
-                  hintText: 'Username',
-                  hintStyle: TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
+             TextField(
+  controller: _usernameController,
+  decoration: InputDecoration(
+    prefixIcon: const Icon(Icons.person, color: Colors.grey),
+    hintText: 'Username',
+    hintStyle: TextStyle(color: Colors.grey),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+),
+
               const SizedBox(height: 16),
               TextField(
-                obscureText: _obscurePassword,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock,color: Colors.grey),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                  ),
-                  hintText: 'Password',
-                  hintStyle: TextStyle(color: Colors.grey),
+  controller: _passwordController,
+  obscureText: _obscurePassword,
+  decoration: InputDecoration(
+    prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+    suffixIcon: IconButton(
+      icon: Icon(
+        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+      ),
+      onPressed: () {
+        setState(() {
+          _obscurePassword = !_obscurePassword;
+        });
+      },
+    ),
+    hintText: 'Password',
+    hintStyle: TextStyle(color: Colors.grey),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+),
 
-                  
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -140,9 +151,60 @@ class _WelcomeBackScreenState extends State<WelcomeBackScreen> {
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeHomePage(),));
-                  },
+                 onPressed: () async {
+  String username = _usernameController.text.trim();
+  String password = _passwordController.text.trim();
+
+  if (username.isEmpty || password.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Please enter username and password")),
+    );
+    return;
+  }
+
+  try {
+    // 1. Get user's email from Firestore using username
+    QuerySnapshot userSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: username)
+        .limit(1)
+        .get();
+
+    if (userSnapshot.docs.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Username not found")),
+      );
+      return;
+    }
+
+    String email = userSnapshot.docs.first['email'];
+
+    // 2. Sign in using email and password
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+
+    // 3. Navigate to homepage
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const EmployeeHomePage()),
+    );
+  } on FirebaseAuthException catch (e) {
+    String message = "Login failed";
+    if (e.code == 'user-not-found') {
+      message = 'No user found for that email.';
+    } else if (e.code == 'wrong-password') {
+      message = 'Wrong password provided.';
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An error occurred: $e')),
+    );
+  }
+},
+
                   child: const Text("Log In", style: TextStyle(fontSize: 16,color: Colors.white)),
                 ),
               ),

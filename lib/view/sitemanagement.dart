@@ -35,11 +35,11 @@ class ViewSitesPage extends StatelessWidget {
             const Text("View Sites"),
             Spacer(),
                _buildAddButton(context, Icons.person_add, "Add Site", () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddSitePage(),
-                      ));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => AddSitePage(),
+                  //     ));
                 }),
           ],
         ),

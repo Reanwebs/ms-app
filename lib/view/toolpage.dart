@@ -90,7 +90,7 @@ class ToolsLogPage extends StatelessWidget {
                     final tool = tools[index];
                     return GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ToolDetailPage(),));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ToolDetailPage(toolId: '', toolName: '',),));
                       },
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 12),

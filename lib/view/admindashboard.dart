@@ -63,11 +63,11 @@ class DashboardPage extends StatelessWidget {
                       ));
                 }),
                 _buildAddButton(context, Icons.home_work, "Add Site", () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddSitePage(),
-                      ));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (context) => AddSitePage(),
+                  //     ));
                 }),
               ],
             ),

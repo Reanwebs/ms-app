@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "922067495219",
+    "project_id": "ms-app-9754d",
+    "storage_bucket": "ms-app-9754d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:922067495219:android:13c620fc3f42cbe8bdb646",
+        "android_client_info": {
+          "package_name": "com.example.construction_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDv-vOgyPBSWKm9ey3PcCszrxxOtOwvgBA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
