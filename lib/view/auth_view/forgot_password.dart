@@ -1,4 +1,3 @@
-import 'package:construction_app/utils/approutes.dart';
 import 'package:construction_app/view/common_widgets/common_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

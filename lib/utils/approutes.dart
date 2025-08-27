@@ -28,7 +28,7 @@ List<GetPage<dynamic>> getpages = [
   ),
   GetPage(
     name: Approutes.forgotPasswordScreen,
-    page: () => ForgotPasswordScreen(),
+    page: () => const ForgotPasswordScreen(),
     transition: Transition.cupertino,
     transitionDuration: const Duration(milliseconds: 200),
   ),

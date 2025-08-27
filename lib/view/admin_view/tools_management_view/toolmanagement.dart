@@ -443,13 +443,13 @@ class RequestedToolsTab extends StatelessWidget {
   }
 
   void _showRejectionReasonDialog(BuildContext context, String docId) {
-    final TextEditingController _reasonController = TextEditingController();
+    final TextEditingController reasonController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Reason for Rejection'),
         content: TextField(
-          controller: _reasonController,
+          controller: reasonController,
           decoration: const InputDecoration(labelText: 'Enter reason'),
         ),
         actions: [
@@ -464,7 +464,7 @@ class RequestedToolsTab extends StatelessWidget {
                   .doc(docId)
                   .update({
                 'status': 'rejected',
-                'rejectionReason': _reasonController.text,
+                'rejectionReason': reasonController.text,
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(

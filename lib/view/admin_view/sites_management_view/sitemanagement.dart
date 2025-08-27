@@ -29,7 +29,7 @@ class ViewSitesPage extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: Color(0xff3F72AF), size: 20),
+              child: Icon(icon, color: const Color(0xff3F72AF), size: 20),
             ),
           ),
         ),
